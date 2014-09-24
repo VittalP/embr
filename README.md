@@ -6,7 +6,7 @@ Empirical Minimum Bayes Risk Prediction: How to extract an extra few % performan
 Vittal Premachandran, Daniel Tarlow and Dhruv Batra<br/>
 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), Columbus, 2014.
 
-The project page can be found [here]. (https://filebox.ece.vt.edu/~vittal/embr/index.html)
+The project page can be found [here](https://filebox.ece.vt.edu/~vittal/embr/index.html).
 
 The code released here can be used to replicate the experimental results presented in the publication.
 
