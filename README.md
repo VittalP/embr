@@ -16,5 +16,5 @@ The code released here can be used to replicate the experimental results present
 
 Please move to the following directories and read the respective README files for instructions on how to use the code.
 
-mbr_intseg - Interactive Binary Segmentation<br/>
-mbr_pose   - Pose Estimation
+embr_intseg - Interactive Binary Segmentation<br/>
+embr_pose   - Pose Estimation
