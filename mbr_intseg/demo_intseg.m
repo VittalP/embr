@@ -7,7 +7,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Paths
-addpath(genpath('./my_utils'));
+addpath(genpath('./utils'));
 
 datadir = './voctest50data'; params.datadir = datadir;
 gtdir = fullfile(datadir,'gtdir'); params.gtdir = gtdir;
@@ -67,7 +67,7 @@ else
         if(exist(seg_sol_iou_en_fn,'file'))
             load(seg_sol_iou_en_fn);
         else
-            parfor pf = 1:ntest
+            for pf = 1:ntest
                 fname = flist(pf).name(1:end-4); params.fname = fname;
 		params.gt = gt{pf};
 
@@ -101,7 +101,7 @@ else
 
 		seg(:,pf) = output.seg;
 		sol_iou(:,pf) = output.sol_iou;
-		sol_en(:,pf) = sol_en;
+		sol_en(:,pf) = output.sol_en;
                 
             end
             save(seg_sol_iou_en_fn, 'seg', 'sol_iou', 'sol_en', '-v7.3');
