@@ -2,12 +2,12 @@
 
 This is the source release accompanying the recent publication;
 
-@inproceedings{embr_CVPR2014,
-        Author = {Vittal Premachandran, Daniel Tarlow and Dhruv Batra},
-        Title = {Empirical Minimum Bayes Risk Prediction: How to extract an extra few % performance from vision models with just three more parameters}
-        Booktitle = {CVPR},
-        Year = {2014},
-    }
+        @inproceedings{embr_CVPR2014,
+                Author = {Vittal Premachandran, Daniel Tarlow and Dhruv Batra},
+                Title = {Empirical Minimum Bayes Risk Prediction: How to extract an extra few % performance from vision models with just three more parameters}
+                Booktitle = {CVPR},
+                Year = {2014},
+        }
 
 
 The project page can be found [here](https://filebox.ece.vt.edu/~vittal/embr/index.html).
