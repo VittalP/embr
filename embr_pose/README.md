@@ -9,7 +9,7 @@ In order to run the demo correctly:
 ## Downloads
 
 Pre-computed DivMBest solutions for all the images in the PARSE dataset can be downloaded from the following source ( https://filebox.ece.vt.edu/~vittal/data/DivMBest_PARSE.zip ).
-After downloading, unzip the tarball and place the files within ./embr/embr_pose/cache/
+After downloading, unzip the tarball, create a directory called 'cache' within ./embr/embr_pose , and copy the files into it.
 
 
 ## Acknowledgements
