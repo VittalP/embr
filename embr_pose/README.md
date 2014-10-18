@@ -6,6 +6,12 @@ In order to run the demo correctly:
 2. Follow the instructions in the README present in the above location.
 3. The results presented in the publiction can now be replicated by running the 'demo_pose_estimation.m' script.
 
+## Downloads
+
+Pre-computed DivMBest solutions for all the images in the PARSE dataset can be downloaded from the following source ( https://filebox.ece.vt.edu/~vittal/data/DivMBest_PARSE.zip ).
+After downloading, unzip the tarball and place the files within ./embr/embr_pose/cache/
+
+
 ## Acknowledgements
 
 We thank Yang and Ramanan for releasing the code accompanying the following publication.
