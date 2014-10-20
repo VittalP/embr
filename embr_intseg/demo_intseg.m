@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Script to perform approx Min Bayes Risk (MBR) prediction on the 2-class
 % interactive segmentation problem with DivMBest solutions.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -8,8 +8,25 @@
 
 %% Paths
 addpath(genpath('./utils'));
+DivMBest_PATH = '~/divmbest/';
+DivMBest_intseg_PATH = [DivMBest_PATH 'intseg/'];
+addpath(genpath(DivMBest_intseg_PATH));
 
-datadir = './voctest50data'; params.datadir = datadir;
+datadir = [DivMBest_intseg_PATH './voctest50data']; params.datadir = datadir;
+
+files = dir([datadir '/*.mat']);
+if(length(files) ~= 50)
+    try
+        !wget https://filebox.ece.vt.edu/~vittal/embr/voctest50data.tar
+        system(['tar -xvf voctest50data.tar']);
+        system(['cp -rf voctest50data ' DivMBest_intseg_PATH]);
+        system('rm -rf voctest50data');
+    catch
+        error('Unable to download/extract/move the PASCAL val data. Please do it manually.');
+    end
+end
+    
+
 gtdir = fullfile(datadir,'gtdir'); params.gtdir = gtdir;
 savedir = './savedir'; params.savedir = savedir;
 
@@ -52,8 +69,6 @@ for pf = 1:ntest
     gt{pf} = imread(sprintf('%s/%s.png',gtdir,fname));
 end
 
-% validationIndices = 1:25;
-% testIndices = 26:50;
 validationIndices = 1:2:50; % Train on odd-numbered images
 testIndices = 2:2:50; % Test on even numbered images
 seg = cell(nummodes,ntest);
