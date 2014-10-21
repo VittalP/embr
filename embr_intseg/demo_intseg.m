@@ -14,10 +14,11 @@ addpath(genpath(DivMBest_intseg_PATH));
 
 datadir = [DivMBest_intseg_PATH './voctest50data']; params.datadir = datadir;
 
+%% Automatically download data if it does not exist
 files = dir([datadir '/*.mat']);
 if(length(files) ~= 50)
     try
-        !wget https://filebox.ece.vt.edu/~vittal/embr/voctest50data.tar
+        websave('voctest50data.tar', 'https://filebox.ece.vt.edu/~vittal/embr/voctest50data.tar');
         system(['tar -xvf voctest50data.tar']);
         system(['cp -rf voctest50data ' DivMBest_intseg_PATH]);
         system('rm -rf voctest50data');
