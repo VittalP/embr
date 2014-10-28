@@ -3,11 +3,19 @@ addpath learning;
 addpath detection;
 addpath visualization;
 addpath evaluation;
+addpath third_party_code;
 if isunix()
   addpath mex_unix;
 elseif ispc()
   addpath mex_pc;
 end
+
+% Path to DivMBest
+DivMBest_PATH = '~/divmbest/';
+DivMBest_pose_estimation_PATH = [DivMBest_PATH 'pose_estimation/'];
+save('DivMBest_pose_estimation_PATH.mat', 'DivMBest_pose_estimation_PATH');
+
+addpath(genpath(DivMBest_pose_estimation_PATH));
 
 % directory for caching models, intermediate data, and results
 cachedir = 'cache/';
@@ -24,7 +32,7 @@ if ~exist([cachedir 'imflip/'],'dir')
 end
 
 buffydir = './BUFFY/';
-parsedir = './PARSE/';
+parsedir = [DivMBest_pose_estimation_PATH './PARSE/'];
 inriadir = './INRIA/';
 
 addpath(buffydir);

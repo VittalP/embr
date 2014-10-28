@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % paths
 % in globals
-globals;
+embr_divmbest_globals;
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -31,8 +31,8 @@ sbin = 4; params.sbin = sbin;
 
 %% EMBR parameters
 
-type = 'perturb';
-% type = 'divmbest';
+% type = 'perturb';
+type = 'divmbest';
 params.type = type;
 nummodes = 50; params.nummodes = nummodes;
 
