@@ -176,7 +176,7 @@ else
                     parfor pt = 1:length(Trange)
                         T = Trange(pt);
                         fprintf('MBR: pl=%d/%d T=%d/%d\n', pl, length(lrange), pt, length(Trange));
-                        all_mbrs_lambda(pt,:) = mbr_prediction_wrapper(T, nummodes, boxes_mmodes_val, det_mmodes_val, solpairacc_val, test_val);
+                        all_mbrs_lambda(pt,:) = embr_prediction_wrapper(T, nummodes, boxes_mmodes_val, det_mmodes_val, solpairacc_val, test_val);
                         fprintf('\n');
                     end
                     save(all_mbrs_lambda_val_fileName, 'all_mbrs_lambda');
@@ -296,7 +296,7 @@ else
                         solpairacc_test = solpairacc(testIndices);
                     end
                     
-                    [mbr, mbrind, mbr_boxes] = mbr_prediction(boxes_mmodes_test, det_mmodes_test, solpairacc_test ,length(testIndices), ps, T);
+                    [mbr, mbrind, mbr_boxes] = embr_prediction(boxes_mmodes_test, det_mmodes_test, solpairacc_test ,length(testIndices), ps, T);
                     det_mbr_test = PARSE_transback(mbr_boxes);
                     all_mbr_test(ps) = PARSE_eval_apk(det_mbr_test, test(testIndices), 0.1, 0);
                 end
