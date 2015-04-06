@@ -1,11 +1,13 @@
 % Set up global paths used throughout the code
-addpath learning;
-addpath detection;
-addpath visualization;
+%addpath learning;
+%addpath detection;
+%addpath visualization;
 addpath evaluation;
 addpath third_party_code;
+addpath(genpath('~/export_fig/'));
+
 if isunix()
-  addpath mex_unix;
+%  addpath mex_unix;
 elseif ispc()
   addpath mex_pc;
 end
@@ -13,7 +15,8 @@ end
 % Path to DivMBest
 DivMBest_PATH = '~/divmbest/';
 DivMBest_pose_estimation_PATH = [DivMBest_PATH 'pose_estimation/'];
-save('DivMBest_pose_estimation_PATH.mat', 'DivMBest_pose_estimation_PATH');
+%save('DivMBest_pose_estimation_PATH.mat', 'DivMBest_pose_estimation_PATH');
+params.DivMBest_PATH = DivMBest_pose_estimation_PATH;
 
 addpath(genpath(DivMBest_pose_estimation_PATH));
 
@@ -31,8 +34,5 @@ if ~exist([cachedir 'imflip/'],'dir')
   mkdir([cachedir 'imflip/']);
 end
 
-buffydir = './BUFFY/';
 parsedir = [DivMBest_pose_estimation_PATH './PARSE/'];
 inriadir = './INRIA/';
-
-addpath(buffydir);

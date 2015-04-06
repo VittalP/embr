@@ -9,7 +9,7 @@
 % paths
 % in globals
 embr_divmbest_globals;
-
+addpath(genpath('~/export_fig'))
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % parameters
@@ -31,8 +31,8 @@ sbin = 4; params.sbin = sbin;
 
 %% EMBR parameters
 
-% type = 'perturb';
-type = 'divmbest';
+type = 'perturb';
+%type = 'divmbest';
 params.type = type;
 nummodes = 50; params.nummodes = nummodes;
 
@@ -43,12 +43,15 @@ if(strcmp(type, 'divmbest'))
 end
 
 if(strcmp(type, 'perturb'))
-    lrange = [];
-    lrange = [0.1:0.5:10];
-    lrange = [lrange, 1:10:101];
-    lrange = [lrange, 0.001:0.02:0.51];
-    lrange = lrange(randperm(length(lrange)));
-    lrange = sort(unique(lrange));
+    % lrange = [];
+    % lrange = [0.1:0.5:10];
+    % lrange = [lrange, 1:10:101];
+    % lrange = [lrange, 0.001:0.02:0.51];
+    % lrange = lrange(randperm(length(lrange)));
+    % lrange = sort(unique(lrange));
+
+    lrange = -[0.001:0.002:0.2];
+    lrange = lrange(1:25);
 end
 
 one_scale = 0; params.one_scale = one_scale;
@@ -87,6 +90,15 @@ params.suffix = suffix;
 [meanapk_deva apk] = PARSE_eval_apk(det, test, 0.1);
 %[meanapk_mmodes apk_mmodes] = PARSE_eval_apk(det_mmodes, test, 0.1);
 
+ALPHA_TRIM_ARR = [0.85:0.05:0.95];
+ALPHA_TRIM_ARR = [0];
+
+for alpha_idx = 1:length(ALPHA_TRIM_ARR)
+
+    ALPHA_TRIM = ALPHA_TRIM_ARR(alpha_idx)
+
+    type = lower(type);
+
 %% Perform cross validation
 nfold = 10;
 display(['Performing ' num2str(nfold) ' fold cross validation.']);
@@ -94,7 +106,7 @@ display(['Performing ' num2str(nfold) ' fold cross validation.']);
 indicesSet = getIndicesSet(numTestExamples, nfold);
 
 % loop through the folds
-all_mbr_test_all_folds_fileName = ['./cache/' type '_all_mbr_test_all_folds.mat'];
+all_mbr_test_all_folds_fileName = ['./cache/' type '_all_mbr_test_all_folds_alpha_' num2str(ALPHA_TRIM) '.mat'];
 if(exist(all_mbr_test_all_folds_fileName, 'file'))
     load(all_mbr_test_all_folds_fileName);
 else
@@ -105,7 +117,7 @@ else
         testIndices = indicesSet{testIndex};
         
         %% Grid search over the validation set
-        all_mbrs_val_fileName = ['./cache/' type '_all_mbrs_' num2str(nfold) 'fold_set' num2str(testIndex) '.mat'];
+        all_mbrs_val_fileName = ['./cache/' type '_all_mbrs_alpha' num2str(ALPHA_TRIM) '_' num2str(nfold) 'fold_set' num2str(testIndex) '.mat'];
         if(exist(all_mbrs_val_fileName, 'file'))
             load(all_mbrs_val_fileName);
         else
@@ -168,7 +180,7 @@ else
                 test_val = test(validationIndices);
                 solpairacc_val = solpairacc(validationIndices);
                 
-                all_mbrs_lambda_val_fileName = ['./cache/' type '_all_mbrs_' num2str(lambda) '_' num2str(nfold) 'fold_set' num2str(testIndex) '.mat'];
+                all_mbrs_lambda_val_fileName = ['./cache/' type '_all_mbrs_alpha_' num2str(ALPHA_TRIM) '_' num2str(lambda) '_' num2str(nfold) 'fold_set' num2str(testIndex) '.mat'];
                 if(exist(all_mbrs_lambda_val_fileName, 'file'))
                     load(all_mbrs_lambda_val_fileName);
                 else
@@ -176,7 +188,7 @@ else
                     parfor pt = 1:length(Trange)
                         T = Trange(pt);
                         fprintf('MBR: pl=%d/%d T=%d/%d\n', pl, length(lrange), pt, length(Trange));
-                        all_mbrs_lambda(pt,:) = embr_prediction_wrapper(T, nummodes, boxes_mmodes_val, det_mmodes_val, solpairacc_val, test_val);
+                        all_mbrs_lambda(pt,:) = embr_prediction_wrapper(T, nummodes, boxes_mmodes_val, det_mmodes_val, solpairacc_val, test_val, ALPHA_TRIM);
                         fprintf('\n');
                     end
                     save(all_mbrs_lambda_val_fileName, 'all_mbrs_lambda');
@@ -189,7 +201,7 @@ else
         
         %% Test on held out set
         display('Testing on the held out set...');
-        test_set_results_fn = ['./cache/' type '_oracle_test_results_' num2str(nfold) 'fold_testSet' num2str(testIndex) '.mat'];
+        test_set_results_fn = ['./cache/' type '_oracle_test_results_alpha_' num2str(ALPHA_TRIM) '_' num2str(nfold) 'fold_testSet' num2str(testIndex) '.mat'];
         if(exist(test_set_results_fn, 'file'))
             load(test_set_results_fn);
         else
@@ -248,7 +260,7 @@ else
 		params.lambda = lambda;
 		output = DivMBest_pose_estimation(params); % This just loads boxes_mmodes
 		boxes_mmodes = output.boxes_mmodes;
-		det_mmodes = params.det_mmodes;
+		det_mmodes = output.det_mmodes;
 
                 
                 % Create new variables pertaining to just the test set
@@ -263,6 +275,10 @@ else
                         fprintf('%d...',ps);
                         [spck, sind] = max(sol_mpck_test(1:ps,:),[],1);
                         
+                        if(exist('det_oracle_test', 'var'))
+                            clear det_oracle_test;
+                        end
+
                         % get oracle detections
                         for pim=1:length(testIndices)
                             det_oracle_test(pim).point = det_mmodes_test(pim).point(:,:,sind(1,pim));
@@ -296,7 +312,7 @@ else
                         solpairacc_test = solpairacc(testIndices);
                     end
                     
-                    [mbr, mbrind, mbr_boxes] = embr_prediction(boxes_mmodes_test, det_mmodes_test, solpairacc_test ,length(testIndices), ps, T);
+                    [mbr, mbrind, mbr_boxes] = embr_prediction(boxes_mmodes_test, det_mmodes_test, solpairacc_test ,length(testIndices), ps, T, ALPHA_TRIM);
                     det_mbr_test = PARSE_transback(mbr_boxes);
                     all_mbr_test(ps) = PARSE_eval_apk(det_mbr_test, test(testIndices), 0.1, 0);
                 end
@@ -374,7 +390,7 @@ lw = 4;
 fsize = 30;
 
 if(strcmp(type, 'perturb'))
-    type = 'Perturb&MAP';
+    type = 'PnM';
 end
 if(strcmp(type, 'divmbest'))
     type = 'DivMBest';
@@ -448,6 +464,12 @@ legendinfo{count} = leg;
 
 xlabel('# Solutions M', 'FontSize', fsize);
 ylabel('Mean APK(%)', 'FontSize', fsize);
-legend(legendinfo);
+lgnd = legend(legendinfo);
+set(lgnd, 'color', 'none');
 set(gcf, 'Color', 'w');
 set(gca,'fontsize',fsize,'linewidth',lw);
+set(gcf,'position',[156 93 914 691]);
+export_fig(['./plots/' type 'mapk_v_M_' num2str(ALPHA_TRIM) '.pdf']);
+close all;
+
+end
